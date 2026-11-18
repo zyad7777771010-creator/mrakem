@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f2f2f7">
+<title>مراكم</title>
+<style>
+:root{
+  --bg:#f2f2f7; --card:#ffffff; --ink:#1c1c1e; --sub:#8e8e93; --sep:#e5e5ea;
+  --accent:#0a84ff; --ok:#34c759; --bad:#ff3b30; --fill:#e9e9ef;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#000; --card:#1c1c1e; --ink:#f2f2f7; --sub:#8e8e93; --sep:#38383a;
+    --accent:#0a84ff; --ok:#30d158; --bad:#ff453a; --fill:#2c2c2e; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{--bg:#000; --card:#1c1c1e; --ink:#f2f2f7; --sub:#8e8e93; --sep:#38383a; --fill:#2c2c2e; color-scheme:dark;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"SF Arabic","Segoe UI",Tahoma,Arial,sans-serif;font-size:16px;line-height:1.6;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:.5px solid var(--sep);display:flex;align-items:center;justify-content:space-between;padding:12px 16px;min-height:52px}
+.nav h1{font-size:17px;font-weight:600;margin:0;text-align:center;flex:1}
+.nav .side{min-width:70px;font-size:16px;color:var(--accent);background:none;border:0;padding:6px 0;cursor:pointer;font-family:inherit}
+.nav .side:empty{visibility:hidden}
+main{max-width:620px;margin:0 auto;padding:16px 16px 40px;animation:in .3s ease}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.large{font-size:30px;font-weight:700;margin:8px 0 14px;letter-spacing:-.3px}
+.section-title{font-size:13px;color:var(--sub);text-transform:uppercase;margin:22px 4px 6px;letter-spacing:.2px}
+.group{background:var(--card);border-radius:14px;overflow:hidden;margin-bottom:6px}
+.cell{display:flex;align-items:center;gap:12px;padding:13px 16px;min-height:50px;border-bottom:.5px solid var(--sep);cursor:pointer;transition:background .15s}
+.cell:last-child{border-bottom:0}
+.cell:active{background:var(--fill)}
+.cell .grow{flex:1;min-width:0}
+.cell .t{font-size:16px}
+.cell .s{font-size:13px;color:var(--sub);margin-top:2px}
+.cell .chev{color:#c7c7cc;font-size:18px}
+.cell.static{cursor:default}
+.cell.static:active{background:none}
+.cell input[type=text],.cell input[type=number],.cell select{border:0;background:transparent;color:var(--ink);font:inherit;text-align:start;width:100%;outline:none;padding:0}
+.cell select{appearance:none;direction:rtl;cursor:pointer}
+.value{color:var(--sub);font-size:15px}
+.check{width:24px;height:24px;border-radius:50%;border:1.5px solid #c7c7cc;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;font-size:14px;transition:all .2s}
+.check.on{background:var(--ok);border-color:var(--ok)}
+.btn{display:block;width:100%;border:0;border-radius:14px;padding:14px;font:600 16px inherit;font-family:inherit;background:var(--accent);color:#fff;cursor:pointer;margin:14px 0 0;transition:transform .1s,opacity .2s}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.45}
+.btn.ghost{background:var(--card);color:var(--accent)}
+.btn.danger{background:var(--card);color:var(--bad)}
+.btn.small{display:inline-block;width:auto;padding:8px 14px;font-size:14px;margin:0;border-radius:999px}
+.row{display:flex;gap:8px;align-items:center}
+.row>*{flex:1}
+.add-row{background:var(--card);border-radius:14px;padding:4px 16px;display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.add-row input{flex:1;border:0;background:transparent;color:var(--ink);font:inherit;padding:12px 0;outline:none}
+.add-row button{background:none;border:0;color:var(--accent);font:600 15px inherit;font-family:inherit;cursor:pointer;padding:8px 0}
+.bar{height:6px;background:var(--fill);border-radius:999px;overflow:hidden;margin:10px 0 4px}
+.bar>div{height:100%;background:var(--accent);border-radius:999px;transition:width .5s ease}
+.rank{display:flex;align-items:center;gap:14px;padding:16px}
+.rank .badge{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;background:var(--fill)}
+.rank .name{font-size:18px;font-weight:600}
+.rank .next{font-size:13px;color:var(--sub)}
+.explain{background:var(--card);border-radius:14px;padding:16px;margin:12px 0;font-size:15px;line-height:1.9;white-space:pre-wrap}
+.quiz-card{background:var(--card);border-radius:18px;padding:20px;margin-top:8px;min-height:260px;animation:in .25s ease}
+.pill{display:inline-block;font-size:12px;padding:3px 10px;border-radius:999px;background:var(--fill);color:var(--sub);margin-bottom:10px}
+.pill.hi{background:rgba(10,132,255,.15);color:var(--accent)}
+.qtext{font-size:18px;font-weight:600;line-height:1.7;margin-bottom:12px}
+.opt{display:flex;align-items:center;gap:10px;padding:13px 14px;border-radius:12px;background:var(--fill);margin:8px 0;cursor:pointer;border:1.5px solid transparent;transition:all .15s}
+.opt.sel{border-color:var(--accent)}
+.opt.right{background:rgba(52,199,89,.16);border-color:var(--ok)}
+.opt.wrong{background:rgba(255,59,48,.14);border-color:var(--bad)}
+.opt .dot{width:20px;height:20px;border-radius:50%;border:1.5px solid #c7c7cc;flex-shrink:0}
+.opt.sel .dot{background:var(--accent);border-color:var(--accent)}
+.nav-q{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:10px}
+.nav-q .btn{margin:0;flex:1}
+.dots{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin:12px 0}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--fill)}
+.dots i.done{background:var(--accent)}
+.dots i.cur{background:var(--ink)}
+.report{background:none;border:0;color:var(--sub);font-size:13px;cursor:pointer;font-family:inherit;margin-top:10px;text-decoration:underline}
+.msg{color:var(--bad);font-size:14px;padding:8px 4px}
+.muted{color:var(--sub);font-size:14px;padding:4px}
+.stars{display:flex;justify-content:center;gap:8px;font-size:34px;color:var(--fill);cursor:pointer;margin:14px 0;user-select:none}
+.stars .on{color:#ffcc00}
+textarea.box{width:100%;border:0;border-radius:14px;background:var(--card);color:var(--ink);font:inherit;padding:14px;min-height:110px;resize:vertical;outline:none}
+.hidden{display:none!important}
+.spin{display:inline-block;width:18px;height:18px;border:2px solid var(--fill);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite;vertical-align:middle;margin-left:8px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.done-title{font-size:26px;font-weight:700;text-align:center;margin:10px 0}
+.center{text-align:center}
+.sig{text-align:center;color:var(--sub);font-size:13px;padding:24px 16px 32px;line-height:1.8}
+.sig strong{color:var(--ink);font-size:15px}
+</style>
+</head>
+<body>
+<div class="nav">
+  <button class="side" id="back">رجوع</button>
+  <h1 id="title">مراكم</h1>
+  <span class="side"></span>
+</div>
+<main id="app"></main>
+<footer class="sig">توقيع<br><strong>زياد محمد</strong></footer>
+
+<script>
+(function(){
+  const LEVELS = [
+    {key:'bronze', name:'برونزي', icon:'🥉', min:0},
+    {key:'silver', name:'فضي', icon:'🥈', min:30},
+    {key:'gold', name:'ذهبي', icon:'🥇', min:80},
+    {key:'platinum', name:'بلاتينيوم', icon:'💠', min:150},
+    {key:'diamond', name:'ماسي', icon:'💎', min:250}
+  ];
+  const YEARS = ['الأول الابتدائي','الثاني الابتدائي','الثالث الابتدائي','الرابع الابتدائي','الخامس الابتدائي','السادس الابتدائي','الأول الإعدادي','الثاني الإعدادي','الثالث الإعدادي','الأول الثانوي','تانية بكالوريا','الثالث الثانوي'];
+  const GOVS = ['القاهرة','الجيزة','الإسكندرية','الدقهلية','الشرقية','القليوبية','البحيرة','المنوفية','الغربية','كفر الشيخ','دمياط','بورسعيد','الإسماعيلية','السويس','الفيوم','بني سويف','المنيا','أسيوط','سوهاج','قنا','الأقصر','أسوان','البحر الأحمر','الوادي الجديد','مطروح','شمال سيناء','جنوب سيناء'];
+
+  const app = document.getElementById('app');
+  const titleEl = document.getElementById('title');
+  const backBtn = document.getElementById('back');
+  const $ = (s,r=document)=>r.querySelector(s);
+  const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const uid = () => Math.random().toString(36).slice(2,9);
+
+  let S = {};
+  try { S = JSON.parse(localStorage.getItem('mrakem2')||'{}') || {}; } catch(e){ S = {}; }
+  S = Object.assign({year:'', gov:'', days:14, subjects:[], plan:null, best:{}, quizzes:{}, explain:{}, reports:[], feedback:null}, S);
+  function save(){ try{ localStorage.setItem('mrakem2', JSON.stringify(S)); }catch(e){} }
+
+  // ----- Routing -----
+  let stack = [];
+  function go(view, params={}, push=true){
+    if(push && view!==current().view) stack.push({view, params});
+    if(!push) { stack = [{view, params}]; }
+    render();
+  }
+  function current(){ return stack[stack.length-1] || {view:'home', params:{}}; }
+  backBtn.onclick = () => { if(stack.length>1){ stack.pop(); render(false); } };
+
+  // ----- Scoring -----
+  function lessonsAll(){ return S.subjects.flatMap(s=>s.lessons.map(l=>({...l, subject:s}))); }
+  function totalPoints(){ return Object.values(S.best).reduce((a,b)=>a+b,0); }
+  function level(p){ let L = LEVELS[0]; LEVELS.forEach(x=>{ if(p>=x.min) L=x; }); return L; }
+  function nextLevel(p){ return LEVELS.find(x=>x.min>p) || null; }
+  function doneCount(){ return lessonsAll().filter(l=>l.done).length; }
+
+  // ----- Views -----
+  function render(){
+    const c = current();
+    const v = c.view;
+    backBtn.style.visibility = stack.length>1 ? 'visible' : 'hidden';
+    backBtn.textContent = stack.length>1 ? 'رجوع' : '';
+    if(v==='profile') return renderProfile();
+    if(v==='home') return renderHome();
+    if(v==='subject') return renderSubject(c.params.id);
+    if(v==='lesson') return renderLesson(c.params.id);
+    if(v==='quiz') return renderQuiz(c.params.id);
+    if(v==='feedback') return renderFeedback();
+    if(v==='plan') return renderPlan();
+  }
+  function setTitle(t){ titleEl.textContent = t; }
+
+  // Profile
+  function renderProfile(){
+    setTitle('مراكم');
+    app.innerHTML = `
+      <div class="large">أهلاً 👋</div>
+      <div class="section-title">بياناتك</div>
+      <div class="group">
+        <div class="cell static"><div class="grow">السنة الدراسية</div>
+          <select id="year" style="flex:1;border:0;background:transparent;color:var(--ink);font:inherit;text-align:left;outline:none">
+            <option value="">اختار</option>${YEARS.map(y=>`<option ${S.year===y?'selected':''}>${y}</option>`).join('')}
+          </select></div>
+        <div class="cell static"><div class="grow">المحافظة</div>
+          <select id="gov" style="flex:1;border:0;background:transparent;color:var(--ink);font:inherit;text-align:left;outline:none">
+            <option value="">اختار</option>${GOVS.map(g=>`<option ${S.gov===g?'selected':''}>${g}</option>`).join('')}
+          </select></div>
+      </div>
+      <p class="muted" id="perr"></p>
+      <button class="btn" id="save-profile">كمّل</button>`;
+    $('#save-profile').onclick = ()=>{
+      const y=$('#year').value, g=$('#gov').value;
+      if(!y||!g){ $('#perr').textContent='اختار السنة والمحافظة'; return; }
+      S.year=y; S.gov=g; save(); go('home',{},false);
+    };
+  }
+
+  // Home
+  function renderHome(){
+    if(!S.year||!S.gov){ return go('profile',{},false); }
+    setTitle('مراكم');
+    const p = totalPoints(), L = level(p), N = nextLevel(p);
+    const total = lessonsAll().length, d = doneCount();
+    const pct = total ? Math.round(d/total*100) : 0;
+    const progressToNext = N ? Math.round((p-L.min)/(N.min-L.min)*100) : 100;
+    app.innerHTML = `
+      <div class="large">مراكم</div>
+      <div class="muted">${esc(S.year)} · ${esc(S.gov)}</div>
+      <div class="section-title">مستواك</div>
+      <div class="group">
+        <div class="rank"><div class="badge">${L.icon}</div>
+          <div class="grow" style="flex:1">
+            <div class="name">${L.name}</div>
+            <div class="next">${p} نقطة${N?` · باقي ${N.min-p} للـ${N.name}`:' · وصلت لأعلى مستوى 🎉'}</div>
+            <div class="bar"><div style="width:${progressToNext}%"></div></div>
+          </div></div>
+      </div>
+      <div class="section-title">التقدم</div>
+      <div class="group"><div class="cell static"><div class="grow">
+        <div class="t">${d} من ${total} درس</div>
+        <div class="bar"><div style="width:${pct}%"></div></div>
+      </div></div></div>
+      <div class="section-title">موادي</div>
+      <div class="group" id="subs">
+        ${S.subjects.map(s=>{
+          const sd = s.lessons.filter(l=>l.done).length;
+          return `<div class="cell" data-sub="${s.id}"><div class="grow"><div class="t">${esc(s.name)}</div><div class="s">${sd} من ${s.lessons.length} درس</div></div><span class="chev">‹</span></div>`;
+        }).join('') || `<div class="cell static"><div class="grow muted">لسه ما أضفتش مواد</div></div>`}
+      </div>
+      <div class="add-row"><input id="new-sub" placeholder="أضف مادة جديدة"><button id="add-sub">إضافة</button></div>
+      <div class="section-title">المذاكرة</div>
+      <div class="group">
+        <div class="cell" id="go-plan"><div class="grow"><div class="t">خطة المراجعة</div><div class="s">${S.plan?`${S.plan.length} يوم`:'وزّع الدروس على أيام'}</div></div><span class="chev">‹</span></div>
+        <div class="cell" id="go-fb"><div class="grow"><div class="t">قيّم الموقع</div></div><span class="chev">‹</span></div>
+      </div>
+      <div class="section-title">الإعدادات</div>
+      <div class="group">
+        <div class="cell" id="edit-profile"><div class="grow"><div class="t">تغيير السنة أو المحافظة</div></div><span class="chev">‹</span></div>
+      </div>`;
+    $('#subs').onclick = e=>{ const c=e.target.closest('[data-sub]'); if(c) go('subject',{id:c.dataset.sub}); };
+    $('#add-sub').onclick = ()=>{
+      const n=$('#new-sub').value.trim(); if(!n) return;
+      S.subjects.push({id:uid(), name:n, lessons:[]}); save(); renderHome();
+    };
+    $('#go-plan').onclick = ()=> go('plan');
+    $('#go-fb').onclick = ()=> go('feedback');
+    $('#edit-profile').onclick = ()=> go('profile');
+  }
+
+  // Subject
+  function renderSubject(id){
+    const s = S.subjects.find(x=>x.id===id); if(!s) return go('home',{},false);
+    setTitle(s.name);
+    const sd = s.lessons.filter(l=>l.done).length;
+    app.innerHTML = `
+      <div class="large">${esc(s.name)}</div>
+      <div class="muted">${sd} من ${s.lessons.length} درس منجز</div>
+      <div class="bar"><div style="width:${s.lessons.length?Math.round(sd/s.lessons.length*100):0}%"></div></div>
+      <div class="section-title">الدروس المتراكمة</div>
+      <div class="add-row"><input id="new-lesson" placeholder="اكتب اسم الدرس"><button id="add-lesson">إضافة</button></div>
+      <div class="group" id="lessons">
+        ${s.lessons.map(l=>`
+          <div class="cell" data-lesson="${l.id}">
+            <div class="check ${l.done?'on':''}" data-toggle="${l.id}">${l.done?'✓':''}</div>
+            <div class="grow"><div class="t" style="${l.done?'text-decoration:line-through;color:var(--sub)':''}">${esc(l.name)}</div>
+              <div class="s">${S.best[l.id]!=null?`أفضل نتيجة: ${S.best[l.id]} نقطة`:'لم يُختبر بعد'}</div></div>
+            <span class="chev">‹</span>
+          </div>`).join('') || `<div class="cell static"><div class="grow muted">اكتب أول درس متراكم فوق</div></div>`}
+      </div>
+      <button class="btn danger" id="del-sub" style="margin-top:20px">حذف المادة</button>`;
+    $('#add-lesson').onclick = ()=>{
+      const n=$('#new-lesson').value.trim(); if(!n) return;
+      s.lessons.push({id:uid(), name:n, done:false}); save(); renderSubject(id);
+    };
+    $('#new-lesson').onkeydown = e=>{ if(e.key==='Enter') $('#add-lesson').click(); };
+    $('#lessons').onclick = e=>{
+      const t = e.target.closest('[data-toggle]');
+      if(t){ const l=s.lessons.find(x=>x.id===t.dataset.toggle); l.done=!l.done; save(); return renderSubject(id); }
+      const c = e.target.closest('[data-lesson]');
+      if(c) go('lesson',{id:c.dataset.lesson});
+    };
+    $('#del-sub').onclick = ()=>{
+      if(!confirm('تحذف المادة وكل دروسها؟')) return;
+      S.subjects = S.subjects.filter(x=>x.id!==id); save(); stack.pop(); render(false);
+    };
+  }
+
+  function findLesson(id){
+    for(const s of S.subjects){ const l=s.lessons.find(x=>x.id===id); if(l) return {l,s}; }
+    return null;
+  }
+
+  // Lesson
+  function renderLesson(id){
+    const f = findLesson(id); if(!f) return go('home',{},false);
+    const {l,s} = f;
+    setTitle(l.name);
+    const q = encodeURIComponent(`شرح درس ${l.name} ${s.name} ${S.year}`);
+    const exp = S.explain[l.id];
+    app.innerHTML = `
+      <div class="large">${esc(l.name)}</div>
+      <div class="muted">${esc(s.name)} · ${esc(S.year)}</div>
+      <div class="section-title">الشرح</div>
+      <div class="group">
+        <a class="cell" href="https://www.youtube.com/results?search_query=${q}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">
+          <div class="grow"><div class="t">فيديو شرح الدرس</div><div class="s">نتائج يوتيوب لشرح مبسط</div></div><span class="chev">‹</span></a>
+        <div class="cell" id="quick"><div class="grow"><div class="t">شرح مختصر الآن</div><div class="s">ملخص مبسط للدرس بالذكاء الاصطناعي</div></div><span class="chev">‹</span></div>
+      </div>
+      <div id="explain-box">${exp?`<div class="explain">${esc(exp)}</div>`:''}</div>
+      <div class="section-title">الاختبار</div>
+      <div class="group">
+        <div class="cell" id="start-quiz"><div class="grow"><div class="t">ابدأ الكويز (10 أسئلة)</div>
+          <div class="s">${S.best[l.id]!=null?`أفضل نتيجة: ${S.best[l.id]} نقطة`:'7 أسئلة متوسطة (نقطة) و3 مستويات عليا (5 نقط)'}</div></div><span class="chev">‹</span></div>
+      </div>
+      <div class="section-title">الحالة</div>
+      <div class="group"><div class="cell" id="toggle-done"><div class="check ${l.done?'on':''}">${l.done?'✓':''}</div>
+        <div class="grow"><div class="t">${l.done?'درس منجز':'علّم الدرس كمنجز'}</div></div></div></div>`;
+    $('#start-quiz').onclick = ()=> go('quiz',{id:l.id});
+    $('#toggle-done').onclick = ()=>{ l.done=!l.done; save(); renderLesson(id); };
+    $('#quick').onclick = async ()=>{
+      const box = $('#explain-box'); box.innerHTML = '<div class="muted"><span class="spin"></span>بنجهز الشرح..</div>';
+      const grade = S.year === 'الثالث الثانوي' || S.year === 'تانية بكالوريا' ? 'شرح مبسط جداً وواضح، بخطوات قصيرة وأمثلة من الحياة' : 'شرح مبسط وجميل وسهل الفهم';
+      const prompt = `اشرح للطالب المصري في ${S.year} درس "${l.name}" من مادة ${s.name} في حوالي 150 كلمة.
+الأسلوب: ${grade}. اكتب بالعربي فقط، من غير ماركداون ولا نجوم ولا عناوين.
+ابدأ بالفكرة الأساسية، وبعدين 3 نقاط مهمة مفصولة بسطر، وبعدين مثال واحد.`;
+      const text = await ask(prompt, true);
+      if(text){ S.explain[l.id]=text; save(); box.innerHTML = `<div class="explain">${esc(text)}</div>`; }
+      else box.innerHTML = '<p class="msg">تعذر تحميل الشرح. جرّب تاني.</p>';
+    };
+  }
+
+  // Quiz
+  let Q = null; // {lessonId, items, i, answers:[], checked:false}
+
+  function renderQuiz(id){
+    const f = findLesson(id); if(!f) return go('home',{},false);
+    setTitle('كويز');
+    if(!S.quizzes[id]){
+      app.innerHTML = `<div class="center" style="padding-top:60px"><span class="spin"></span><div class="muted" style="margin-top:14px">بنجهز الأسئلة..</div></div>`;
+      generateQuiz(f.l, f.s).then(items=>{
+        if(items){ S.quizzes[id]=items; save(); Q={lessonId:id, items, i:0, answers:[], checked:false}; drawQuestion(); }
+        else { app.innerHTML = `<p class="msg center">تعذر إنشاء الكويز. جرّب تاني.</p><button class="btn" id="retry">إعادة المحاولة</button>`; $('#retry').onclick=()=>renderQuiz(id); }
+      });
+      return;
+    }
+    Q = {lessonId:id, items:S.quizzes[id], i:0, answers:[], checked:false};
+    drawQuestion();
+  }
+
+  function drawQuestion(){
+    const items = Q.items, n = items.length, it = items[Q.i];
+    const hi = it.type==='high';
+    const answered = Q.answers[Q.i]!=null;
+    const shown = Q.checked || answered;
+    app.innerHTML = `
+      <div class="dots">${items.map((_,k)=>`<i class="${Q.answers[k]!=null?'done':''} ${k===Q.i?'cur':''}"></i>`).join('')}</div>
+      <div class="muted center">السؤال ${Q.i+1} من ${n}</div>
+      <div class="quiz-card">
+        <span class="pill ${hi?'hi':''}">${hi?'مستوى عالٍ · 5 نقط':'متوسط · نقطة'}</span>
+        <div class="qtext">${esc(it.q)}</div>
+        <div id="opts">${it.options.map((o,j)=>{
+          let cls='opt';
+          if(Q.checked){ if(j===it.answer) cls+=' right'; else if(j===Q.answers[Q.i]) cls+=' wrong'; }
+          else if(Q.answers[Q.i]===j) cls+=' sel';
+          return `<div class="${cls}" data-j="${j}"><span class="dot"></span><span>${esc(o)}</span></div>`;
+        }).join('')}</div>
+        ${shown && it.explain ? `<div class="explain" style="margin:14px 0 0;font-size:14px">${esc(it.explain)}</div>` : ''}
+        <button class="report" id="report">إبلاغ عن خطأ في السؤال</button>
+      </div>
+      <div class="nav-q">
+        <button class="btn ghost" id="prev" ${Q.i===0?'disabled':''}>السابق</button>
+        ${Q.i<n-1 ? `<button class="btn" id="next">التالي</button>` : (Q.checked ? `<button class="btn" id="finish">النتيجة</button>` : `<button class="btn" id="check" ${Object.keys(Q.answers).length<n?'disabled':''}>صحّح</button>`)}
+      </div>`;
+    if(!Q.checked){
+      $('#opts').onclick = e=>{ const o=e.target.closest('[data-j]'); if(!o) return; Q.answers[Q.i]=+o.dataset.j; drawQuestion(); };
+    }
+    $('#prev').onclick = ()=>{ if(Q.i>0){ Q.i--; drawQuestion(); } };
+    if($('#next')) $('#next').onclick = ()=>{ Q.i++; drawQuestion(); };
+    if($('#check')) $('#check').onclick = ()=>{ Q.checked=true; Q.i=0; drawQuestion(); };
+    if($('#finish')) $('#finish').onclick = finishQuiz;
+    $('#report').onclick = ()=>{
+      S.reports.push({lessonId:Q.lessonId, q:it.q, at:new Date().toISOString()}); save();
+      $('#report').textContent = 'تم تسجيل البلاغ، شكراً ✓';
+    };
+  }
+
+  function finishQuiz(){
+    let pts = 0, max = 0, right = 0;
+    Q.items.forEach((it,k)=>{
+      const w = it.type==='high'?5:1; max+=w;
+      if(Q.answers[k]===it.answer){ pts+=w; right++; }
+    });
+    const prevBest = S.best[Q.lessonId];
+    const before = level(totalPoints());
+    if(prevBest==null || pts>prevBest) S.best[Q.lessonId]=pts;
+    const after = level(totalPoints());
+    if(pts>=Math.ceil(max*0.5)){ const l=findLesson(Q.lessonId).l; l.done=true; }
+    save();
+    const up = after.key!==before.key;
+    setTitle('النتيجة');
+    app.innerHTML = `
+      <div class="center" style="padding-top:20px">
+        <div style="font-size:64px">${after.icon}</div>
+        <div class="done-title">${pts} نقطة من ${max}</div>
+        <div class="muted">إجابات صح: ${right} من ${Q.items.length}</div>
+        ${up?`<div class="msg" style="color:var(--ok);font-weight:600;font-size:17px">مبروك! وصلت لمستوى ${after.name} 🎉</div>`:`<div class="muted" style="margin-top:8px">المستوى الحالي: ${after.name}</div>`}
+      </div>
+      <button class="btn" id="back-lesson">رجوع للدرس</button>
+      <button class="btn ghost" id="retake">أعد الكويز (يتجاب أسئلة جديدة)</button>`;
+    $('#back-lesson').onclick = ()=>{ stack.pop(); render(false); };
+    $('#retake').onclick = ()=>{ delete S.quizzes[Q.lessonId]; save(); renderQuiz(Q.lessonId); };
+  }
+
+  // Plan
+  function renderPlan(){
+    setTitle('خطة المراجعة');
+    const pending = lessonsAll().filter(l=>!l.done);
+    app.innerHTML = `
+      <div class="large">خطة المراجعة</div>
+      <div class="muted">${pending.length} درس متبقي</div>
+      <div class="section-title">عدد الأيام</div>
+      <div class="group"><div class="cell static"><div class="grow">الأيام المتاحة</div>
+        <input id="days" type="number" min="1" max="365" value="${S.days}" style="width:70px;border:0;background:transparent;color:var(--ink);font:inherit;text-align:left;outline:none"></div></div>
+      <button class="btn" id="make-plan" ${pending.length?'':'disabled'}>اعمل الخطة</button>
+      <p class="msg hidden" id="perr"></p>
+      <div id="plan-out" style="margin-top:16px">${S.plan?S.plan.map(d=>`<div class="group" style="margin-bottom:10px"><div class="cell static"><div class="grow t"><strong>اليوم ${esc(d.day)}</strong></div></div>${(d.items||[]).map(it=>`<div class="cell static"><div class="grow t">${esc(it)}</div></div>`).join('')}</div>`).join(''):''}</div>`;
+    $('#make-plan').onclick = async ()=>{
+      const btn=$('#make-plan'); const days=Math.max(1,parseInt($('#days').value,10)||14); S.days=days; save();
+      btn.disabled=true; btn.innerHTML='<span class="spin"></span>بنعمل الخطة..';
+      const list = pending.map(l=>`${l.subject.name}: ${l.name}`);
+      const prompt = `أنت مساعد دراسي لطالب مصري في ${S.year}.
+عنده الدروس المتراكمة دي: ${JSON.stringify(list)}
+وعايز يخلصها في ${days} يوم. وزّعها بالتوازن، حوالي 2 إلى 3 دروس في اليوم، ورتّب المواد بحيث لا تتكرر نفس المادة أكتر من مرتين ورا بعض، ويكون الدرس الأصعب في الأول.
+رجّع JSON فقط بدون أي كلام أو ماركداون، بالشكل ده بالظبط:
+[{"day":1,"items":["مادة: اسم الدرس"]}]`;
+      const plan = await ask(prompt, true, true);
+      btn.disabled=false; btn.textContent='اعمل الخطة';
+      if(Array.isArray(plan) && plan.length){ S.plan=plan; save(); renderPlan(); }
+      else { $('#perr').textContent='تعذر إنشاء الخطة. جرّب تاني.'; $('#perr').classList.remove('hidden'); }
+    };
+  }
+
+  // Feedback
+  function renderFeedback(){
+    setTitle('قيّم الموقع');
+    let r = S.feedback ? S.feedback.rating : 0;
+    app.innerHTML = `
+      <div class="large">رأيك يهمنا</div>
+      <div class="stars" id="stars">${[1,2,3,4,5].map(v=>`<span data-v="${v}" class="${v<=r?'on':''}">★</span>`).join('')}</div>
+      <textarea class="box" id="fbt" placeholder="إيه اللي عجبك؟ إيه اللي نحتاج نحسنه؟">${esc(S.feedback?S.feedback.text:'')}</textarea>
+      <button class="btn" id="send-fb">إرسال</button>
+      <p class="muted center hidden" id="fbok">شكراً ليك! تقييمك اتسجل.</p>`;
+    $('#stars').onclick = e=>{ const s=e.target.closest('[data-v]'); if(!s) return; r=+s.dataset.v; document.querySelectorAll('#stars span').forEach(x=>x.classList.toggle('on',+x.dataset.v<=r)); };
+    $('#send-fb').onclick = ()=>{
+      if(!r) return;
+      S.feedback = {rating:r, text:$('#fbt').value.trim(), at:new Date().toISOString()}; save();
+      $('#fbok').classList.remove('hidden');
+    };
+  }
+
+  // AI helper
+  async function ask(prompt, plain, json){
+    try{
+      const claude = window.claude; if(!claude) return null;
+      const sample = await claude.use('sample'); if(!sample) return null;
+      const res = await sample(prompt, {modelTier:'default'});
+      let txt = (res.text||'').trim();
+      if(!json) return txt;
+      txt = txt.replace(/```json|```/g,'').trim();
+      const a = txt.indexOf('['), b = txt.lastIndexOf(']');
+      return JSON.parse(txt.slice(a,b+1));
+    }catch(e){ return null; }
+  }
+
+  async function generateQuiz(lesson, subject){
+    const hard = (S.year==='الثالث الثانوي'||S.year==='تانية بكالوريا') ? 'مستوى امتحان الثانوية العامة' : 'مستوى الصف';
+    const prompt = `أنت معلم مصري خبير في منهج ${S.year} مادة ${subject.name}.
+اعمل كويز من 10 أسئلة اختيار من متعدد عن درس "${lesson.name}" بـ${hard}.
+القواعد المهمة جداً:
+- 7 أسئلة من النوع "medium" (تذكر وفهم وتطبيق مباشر، نقطة واحدة).
+- 3 أسئلة من النوع "high" (تحليل وتطبيق على مسألة أو حالة جديدة واستنتاج، 5 نقط).
+- كل سؤال له 4 اختيارات بالضبط، واختيار واحد صح بشكل قاطع. ممنوع أسئلة فيها أكتر من إجابة صح أو إجابة غامضة.
+- تأكد إن الإجابة الصح فعلاً صح، وإن الأرقام والحسابات دقيقة. لو سؤال فيه حساب، اتحقق منه مرتين.
+- اكتب explain: شرح قصير من جملتين يوضح ليه الإجابة دي صح.
+- الاختيارات تكون متقاربة في الشكل بحيث الإجابة مش واضحة من الطول.
+- بالعربي الفصحى المبسطة.
+رجّع JSON فقط بدون أي كلام أو ماركداون، بالشكل ده بالظبط:
+[{"type":"medium","q":"نص السؤال","options":["أ","ب","ج","د"],"answer":0,"explain":"الشرح"}]
+حيث answer رقم الاختيار الصح من 0 إلى 3.`;
+    const items = await ask(prompt, false, true);
+    if(!Array.isArray(items)) return null;
+    const ok = items.filter(x=>x && x.q && Array.isArray(x.options) && x.options.length===4 && Number.isInteger(x.answer) && x.answer>=0 && x.answer<=3);
+    if(ok.length<10) return null;
+    return ok.slice(0,10).map(x=>({type:x.type==='high'?'high':'medium', q:x.q, options:x.options, answer:x.answer, explain:x.explain||''}));
+  }
+
+  // Boot
+  if(!S.year||!S.gov) go('profile',{},true); else go('home',{},true);
+  stack = [{view: S.year&&S.gov?'home':'profile', params:{}}];
+  render();
+})();
+</script>
+</body>
+</html>
